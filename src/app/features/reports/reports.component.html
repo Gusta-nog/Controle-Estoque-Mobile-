@@ -1,0 +1,168 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start"><ion-menu-button></ion-menu-button></ion-buttons>
+    <ion-title>Central de Relatórios</ion-title>
+  </ion-toolbar>
+  <ion-toolbar color="primary">
+    <ion-segment scrollable="true" [value]="currentTab" (ionChange)="segmentChanged($event)" color="light">
+      <ion-segment-button value="clients"><ion-label>Clientes</ion-label></ion-segment-button>
+      <ion-segment-button value="products"><ion-label>Produtos</ion-label></ion-segment-button>
+      <ion-segment-button value="stock"><ion-label>Estoque</ion-label></ion-segment-button>
+      <ion-segment-button value="sales"><ion-label>Vendas</ion-label></ion-segment-button>
+      <ion-segment-button value="receivables"><ion-label>Recebimentos</ion-label></ion-segment-button>
+    </ion-segment>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding" color="light">
+
+  <!-- CLIENTES -->
+  @if (currentTab === 'clients') {
+    <ion-card>
+      <ion-card-content class="ion-text-center">
+        <h2>Total de Clientes</h2>
+        <h1 style="color: var(--ion-color-primary); font-weight: bold;">{{ clients.length }}</h1>
+      </ion-card-content>
+    </ion-card>
+    <ion-searchbar placeholder="Buscar Nome ou CPF" [(ngModel)]="searchClient" (ionInput)="filterClients()"></ion-searchbar>
+    <ion-list style="border-radius: 8px;">
+      @for (c of filteredClients; track c.id) {
+        <ion-item>
+          <ion-label>
+            <h2>{{ c.name }}</h2>
+            <p>CPF: {{ c.cpf }} | Tel: {{ c.phone }}</p>
+            <p>{{ c.email }}</p>
+          </ion-label>
+        </ion-item>
+      }
+    </ion-list>
+  }
+
+  <!-- PRODUTOS -->
+  @if (currentTab === 'products') {
+    <ion-card>
+      <ion-card-content class="ion-text-center">
+        <h2>Total de Produtos</h2>
+        <h1 style="color: var(--ion-color-secondary); font-weight: bold;">{{ products.length }}</h1>
+      </ion-card-content>
+    </ion-card>
+    <ion-searchbar placeholder="Buscar Nome" [(ngModel)]="searchProduct" (ionInput)="filterProducts()"></ion-searchbar>
+    <ion-item>
+      <ion-select label="Categoria" labelPlacement="stacked" [(ngModel)]="categoryFilter" (ionChange)="filterProducts()">
+        <ion-select-option value="">Todas</ion-select-option>
+        @for (cat of categories; track cat) {
+          <ion-select-option [value]="cat">{{ cat }}</ion-select-option>
+        }
+      </ion-select>
+    </ion-item>
+    <ion-list style="border-radius: 8px;" class="ion-margin-top">
+      @for (p of filteredProducts; track p.id) {
+        <ion-item>
+          <ion-label>
+            <h2>{{ p.name }} <ion-badge color="light">{{ p.code }}</ion-badge></h2>
+            <p>{{ p.category }}</p>
+          </ion-label>
+          <div slot="end" class="ion-text-right">
+            <h3>{{ p.price | currency:'BRL' }}</h3>
+            <ion-badge [color]="p.stockQuantity <= 5 ? 'danger' : 'success'">Estoque: {{ p.stockQuantity }}</ion-badge>
+          </div>
+        </ion-item>
+      }
+    </ion-list>
+  }
+
+  <!-- ESTOQUE -->
+  @if (currentTab === 'stock') {
+    <ion-card>
+      <ion-card-content class="ion-text-center">
+        <h2>Quantidade Total em Estoque</h2>
+        <h1 style="color: var(--ion-color-tertiary); font-weight: bold;">{{ totalStockValue }}</h1>
+        <p style="color: var(--ion-color-danger);">
+          @if (lowStockCount > 0) {
+            {{ lowStockCount }} produtos com estoque baixo!
+          }
+        </p>
+      </ion-card-content>
+    </ion-card>
+    <ion-list style="border-radius: 8px;">
+      @for (p of products; track p.id) {
+        <ion-item [class.low-stock-alert]="p.stockQuantity <= 5">
+          @if (p.stockQuantity <= 5) {
+            <ion-icon name="warning" slot="start" color="danger"></ion-icon>
+          }
+          <ion-label>
+            <h2>{{ p.name }}</h2>
+            <p>{{ p.category }}</p>
+          </ion-label>
+          <div slot="end">
+            <ion-badge [color]="p.stockQuantity <= 5 ? 'danger' : 'success'" style="font-size: 1.2rem;">{{ p.stockQuantity }}</ion-badge>
+          </div>
+        </ion-item>
+      }
+    </ion-list>
+  }
+
+  <!-- VENDAS -->
+  @if (currentTab === 'sales') {
+    <ion-card>
+      <ion-card-content class="ion-text-center">
+        <h2>Resumo ({{ totalSalesCount }} vendas)</h2>
+        <h1 style="color: var(--ion-color-primary); font-weight: bold;">{{ totalSalesValue | currency:'BRL' }}</h1>
+      </ion-card-content>
+    </ion-card>
+    <ion-item>
+      <ion-select label="Status" labelPlacement="stacked" [(ngModel)]="saleFilter" (ionChange)="filterSales()">
+        <ion-select-option value="all">Todas</ion-select-option>
+        <ion-select-option value="pending">Pendentes</ion-select-option>
+        <ion-select-option value="paid">Pagas</ion-select-option>
+      </ion-select>
+    </ion-item>
+    <ion-list style="border-radius: 8px;" class="ion-margin-top">
+      @for (s of filteredSales; track s.id) {
+        <ion-item>
+          <ion-label>
+            <h2>{{ s.clientName }}</h2>
+            <p>Venda #{{ s.id.substring(0,8) }} | {{ s.date | date:'dd/MM/yyyy' }}</p>
+          </ion-label>
+          <div slot="end" class="ion-text-right">
+            <h3>{{ s.total | currency:'BRL' }}</h3>
+            <ion-badge [color]="s.status === 'PAID' ? 'success' : 'warning'">{{ s.status === 'PAID' ? 'PAGO' : 'PENDENTE' }}</ion-badge>
+          </div>
+        </ion-item>
+      }
+    </ion-list>
+  }
+
+  <!-- RECEBIMENTOS -->
+  @if (currentTab === 'receivables') {
+    <ion-card>
+      <ion-card-content class="ion-text-center">
+        <p style="margin:0;">Total Recebido</p>
+        <h2 style="color: var(--ion-color-success); font-weight: bold;">{{ totalReceived | currency:'BRL' }}</h2>
+        <hr style="opacity:0.2;">
+        <p style="margin:0;">Total Pendente</p>
+        <h2 style="color: var(--ion-color-warning); font-weight: bold;">{{ totalPending | currency:'BRL' }}</h2>
+      </ion-card-content>
+    </ion-card>
+    <ion-item>
+      <ion-select label="Filtro" labelPlacement="stacked" [(ngModel)]="receivablesFilter" (ionChange)="filterReceivables()">
+        <ion-select-option value="pending">Somente Pendentes</ion-select-option>
+        <ion-select-option value="paid">Somente Pagos</ion-select-option>
+      </ion-select>
+    </ion-item>
+    <ion-list style="border-radius: 8px;" class="ion-margin-top">
+      @for (r of filteredReceivables; track r.id) {
+        <ion-item>
+          <ion-label>
+            <h2>{{ r.clientName }}</h2>
+            <p>{{ r.date | date:'dd/MM/yyyy HH:mm' }}</p>
+          </ion-label>
+          <div slot="end" class="ion-text-right">
+            <h3 style="font-weight: bold;">{{ r.total | currency:'BRL' }}</h3>
+          </div>
+        </ion-item>
+      }
+    </ion-list>
+  }
+
+</ion-content>

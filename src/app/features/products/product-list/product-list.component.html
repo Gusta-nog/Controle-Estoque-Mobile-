@@ -1,0 +1,64 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Produtos</ion-title>
+  </ion-toolbar>
+  <ion-toolbar color="primary">
+    <ion-searchbar placeholder="Código ou Nome..." [(ngModel)]="searchTerm" (ionInput)="filterProducts()"></ion-searchbar>
+  </ion-toolbar>
+  
+  @if (categories.length > 0) {
+    <ion-toolbar color="light">
+      <ion-item lines="none" color="light">
+        <ion-select label="Filtro de Categoria" labelPlacement="stacked" [(ngModel)]="selectedCategory" (ionChange)="filterProducts()">
+          <ion-select-option value="">Todas</ion-select-option>
+          @for (cat of categories; track cat) {
+            <ion-select-option [value]="cat">{{ cat }}</ion-select-option>
+          }
+        </ion-select>
+      </ion-item>
+    </ion-toolbar>
+  }
+</ion-header>
+
+<ion-content>
+  <ion-list>
+    @for (product of filteredProducts; track product.id) {
+      <ion-item-sliding>
+        <ion-item [class.low-stock]="product.stockQuantity <= 5">
+          <ion-icon slot="start" [name]="product.stockQuantity <= 5 ? 'warning' : 'cube'" [color]="product.stockQuantity <= 5 ? 'danger' : 'tertiary'"></ion-icon>
+          <ion-label>
+            <h2>{{ product.name }} <ion-badge color="medium">{{ product.code }}</ion-badge></h2>
+            <p>{{ product.category }} | {{ product.price | currency:'BRL' }}</p>
+          </ion-label>
+          <ion-badge slot="end" [color]="product.stockQuantity <= 5 ? 'danger' : 'success'">
+            {{ product.stockQuantity }} un.
+          </ion-badge>
+        </ion-item>
+
+        <ion-item-options side="end">
+          <ion-item-option color="primary" [routerLink]="['/products/edit', product.id]">
+            <ion-icon slot="icon-only" name="create"></ion-icon>
+          </ion-item-option>
+          <ion-item-option color="danger" (click)="confirmDelete(product)">
+            <ion-icon slot="icon-only" name="trash"></ion-icon>
+          </ion-item-option>
+        </ion-item-options>
+      </ion-item-sliding>
+    }
+
+    @if (filteredProducts.length === 0) {
+      <div class="ion-padding ion-text-center">
+        <p>Nenhum produto encontrado.</p>
+      </div>
+    }
+  </ion-list>
+
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button routerLink="/products/new" color="secondary">
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+</ion-content>

@@ -1,0 +1,71 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Dashboard</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding" color="light">
+  <div class="welcome-banner ion-margin-bottom ion-padding">
+    <h2>Olá, bem-vindo ao Estoque Mobile!</h2>
+    <p>Aqui está o resumo financeiro e da sua operação.</p>
+  </div>
+
+  <ion-grid class="ion-no-padding">
+    <ion-row>
+      <!-- A Receber (Pendentes) -->
+      <ion-col size="12">
+        <ion-card class="metric-card bg-gradient-warning">
+          <ion-card-header>
+            <div class="card-icon white">
+              <ion-icon name="time"></ion-icon>
+            </div>
+            <ion-card-subtitle style="color: rgba(255,255,255,0.9);">A Receber ({{ pendingSalesCount }} vendas)</ion-card-subtitle>
+            <ion-card-title style="color: white; font-size: 2.5rem;">{{ pendingSalesValue | currency:'BRL' }}</ion-card-title>
+          </ion-card-header>
+        </ion-card>
+      </ion-col>
+
+      <!-- Recebidos (Pagos) -->
+      <ion-col size="12">
+        <ion-card class="metric-card bg-gradient-success">
+          <ion-card-header>
+            <div class="card-icon white">
+              <ion-icon name="checkmark-circle"></ion-icon>
+            </div>
+            <ion-card-subtitle style="color: rgba(255,255,255,0.9);">Já Recebido ({{ paidSalesCount }} vendas)</ion-card-subtitle>
+            <ion-card-title style="color: white; font-size: 2.5rem;">{{ paidSalesValue | currency:'BRL' }}</ion-card-title>
+          </ion-card-header>
+        </ion-card>
+      </ion-col>
+
+      <!-- Total de Produtos -->
+      <ion-col size="6">
+        <ion-card class="metric-card">
+          <ion-card-header>
+            <div class="card-icon blue">
+              <ion-icon name="apps"></ion-icon>
+            </div>
+            <ion-card-subtitle>Produtos</ion-card-subtitle>
+            <ion-card-title>{{ totalProducts }}</ion-card-title>
+          </ion-card-header>
+        </ion-card>
+      </ion-col>
+
+      <!-- Estoque Total -->
+      <ion-col size="6">
+        <ion-card class="metric-card">
+          <ion-card-header>
+            <div class="card-icon emerald">
+              <ion-icon name="cube"></ion-icon>
+            </div>
+            <ion-card-subtitle>Estoque (un)</ion-card-subtitle>
+            <ion-card-title>{{ totalStock }}</ion-card-title>
+          </ion-card-header>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>

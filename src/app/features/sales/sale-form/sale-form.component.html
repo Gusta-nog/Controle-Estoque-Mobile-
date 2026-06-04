@@ -1,0 +1,91 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start"><ion-back-button defaultHref="/sales"></ion-back-button></ion-buttons>
+    <ion-title>Nova Venda</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding" color="light">
+  <form [formGroup]="saleForm" (ngSubmit)="finishSale()">
+    <ion-card>
+      <ion-card-content>
+        <ion-item lines="none" [color]="saleForm.get('clientId')?.invalid && saleForm.get('clientId')?.touched ? 'danger' : ''">
+          <ion-select label="Selecionar Cliente *" labelPlacement="stacked" formControlName="clientId" placeholder="Toque para escolher...">
+            @for (client of clients; track client.id) {
+              <ion-select-option [value]="client.id">{{ client.name }} ({{ client.cpf }})</ion-select-option>
+            }
+          </ion-select>
+        </ion-item>
+      </ion-card-content>
+    </ion-card>
+
+    <ion-card class="ion-margin-top">
+      <ion-card-header>
+        <ion-card-title>Adicionar Produto</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <ion-item lines="full">
+          <ion-select label="Produto" labelPlacement="stacked" [(ngModel)]="tempProductId" [ngModelOptions]="{standalone: true}" (ionChange)="onProductSelected()" placeholder="Toque para ver estoque...">
+            @for (p of products; track p.id) {
+              <ion-select-option [value]="p.id">{{ p.name }} - {{ p.price | currency:'BRL' }} (Disp: {{ p.stockQuantity }})</ion-select-option>
+            }
+          </ion-select>
+        </ion-item>
+        
+        @if (selectedProduct) {
+          <ion-item lines="full">
+            <ion-input label="Quantidade" labelPlacement="stacked" type="number" min="1" [max]="selectedProduct.stockQuantity" [(ngModel)]="tempQuantity" [ngModelOptions]="{standalone: true}"></ion-input>
+          </ion-item>
+        }
+        
+        <ion-button expand="block" class="ion-margin-top" (click)="addProduct()" [disabled]="!selectedProduct || tempQuantity <= 0 || tempQuantity > (selectedProduct?.stockQuantity || 0)">
+          <ion-icon name="add" slot="start"></ion-icon> Inserir na Cesta
+        </ion-button>
+      </ion-card-content>
+    </ion-card>
+
+    <ion-list class="ion-margin-top" style="border-radius: 12px; overflow: hidden;">
+      <ion-list-header>
+        <ion-label>Itens da Venda ({{ selectedItems.length }})</ion-label>
+      </ion-list-header>
+      
+      @for (item of selectedItems; track item.productId; let i = $index) {
+        <ion-item-sliding>
+          <ion-item>
+            <ion-label>
+              <h2>{{ item.productName }}</h2>
+              <p>{{ item.quantity }}x {{ item.unitPrice | currency:'BRL' }}</p>
+            </ion-label>
+            <div slot="end" class="ion-text-right">
+              <h3 style="font-weight: bold; color: var(--ion-color-dark);">{{ item.itemSubTotal | currency:'BRL' }}</h3>
+              <p style="font-size: 11px; color: var(--ion-color-medium);">(Arraste para apagar)</p>
+            </div>
+          </ion-item>
+          <ion-item-options side="end">
+            <ion-item-option color="danger" (click)="removeItem(i)">
+              <ion-icon name="trash" slot="icon-only"></ion-icon>
+            </ion-item-option>
+          </ion-item-options>
+        </ion-item-sliding>
+      }
+
+      @if (selectedItems.length === 0) {
+        <ion-item>
+          <ion-label color="medium" class="ion-text-center">Nenhum produto adicionado.</ion-label>
+        </ion-item>
+      }
+    </ion-list>
+
+    <ion-card color="primary" class="ion-margin-top ion-text-center">
+      <ion-card-content>
+        <p style="color: rgba(255,255,255,0.8); margin:0;">Total a Cobrar</p>
+        <h1 style="color: white; font-weight: bold; font-size: 2.5rem; margin: 8px 0;">{{ totalAmount | currency:'BRL' }}</h1>
+      </ion-card-content>
+    </ion-card>
+
+    <ion-button expand="block" type="submit" class="ion-margin-top" color="success" [disabled]="saleForm.invalid || selectedItems.length === 0">
+      <ion-icon name="checkmark-circle" slot="start"></ion-icon>
+      Confirmar e Finalizar
+    </ion-button>
+  </form>
+</ion-content>

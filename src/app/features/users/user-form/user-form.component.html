@@ -1,0 +1,36 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/users"></ion-back-button>
+    </ion-buttons>
+    <ion-title>{{ isEditMode ? 'Editar Usuário' : 'Novo Usuário' }}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <form [formGroup]="userForm" (ngSubmit)="save()">
+    <ion-item lines="full" [color]="userForm.get('name')?.invalid && userForm.get('name')?.touched ? 'danger' : ''">
+      <ion-input label="Nome Completo *" labelPlacement="floating" formControlName="name" type="text" placeholder="Ex: João da Silva"></ion-input>
+    </ion-item>
+
+    <ion-item lines="full" [color]="userForm.get('username')?.invalid && userForm.get('username')?.touched ? 'danger' : ''">
+      <ion-input label="Nome de Usuário (Login) *" labelPlacement="floating" formControlName="username" type="text" placeholder="Ex: joao.silva"></ion-input>
+    </ion-item>
+
+    <ion-item lines="full" [color]="userForm.get('password')?.invalid && userForm.get('password')?.touched ? 'danger' : ''">
+      <ion-input label="Senha *" labelPlacement="floating" formControlName="password" type="password" placeholder="Defina a senha de acesso"></ion-input>
+    </ion-item>
+
+    <ion-item lines="full">
+      <ion-select label="Tipo de Acesso *" labelPlacement="floating" formControlName="role">
+        <ion-select-option value="standard">Padrão</ion-select-option>
+        <ion-select-option value="admin">Administrador</ion-select-option>
+      </ion-select>
+    </ion-item>
+
+    <ion-button expand="block" type="submit" class="ion-margin-top" color="secondary">
+      <ion-icon name="save" slot="start"></ion-icon>
+      Salvar
+    </ion-button>
+  </form>
+</ion-content>

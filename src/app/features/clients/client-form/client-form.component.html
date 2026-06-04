@@ -1,0 +1,37 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/clients"></ion-back-button>
+    </ion-buttons>
+    <ion-title>{{ isEditMode ? 'Editar Cliente' : 'Novo Cliente' }}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <form [formGroup]="clientForm" (ngSubmit)="save()">
+    <ion-item lines="full" [color]="clientForm.get('name')?.invalid && clientForm.get('name')?.touched ? 'danger' : ''">
+      <ion-input label="Nome Completo *" labelPlacement="floating" formControlName="name" type="text" placeholder="Ex: Maria Pereira"></ion-input>
+    </ion-item>
+
+    <ion-item lines="full" [color]="clientForm.get('cpf')?.invalid && clientForm.get('cpf')?.touched ? 'danger' : ''">
+      <ion-input label="CPF *" labelPlacement="floating" formControlName="cpf" type="text" placeholder="Apenas números"></ion-input>
+    </ion-item>
+
+    <ion-item lines="full" [color]="clientForm.get('phone')?.invalid && clientForm.get('phone')?.touched ? 'danger' : ''">
+      <ion-input label="Telefone *" labelPlacement="floating" formControlName="phone" type="tel" placeholder="(00) 00000-0000"></ion-input>
+    </ion-item>
+    
+    <ion-item lines="full" [color]="clientForm.get('email')?.invalid && clientForm.get('email')?.touched ? 'danger' : ''">
+      <ion-input label="E-mail *" labelPlacement="floating" formControlName="email" type="email" placeholder="Ex: maria@email.com"></ion-input>
+    </ion-item>
+    
+    <ion-item lines="full" [color]="clientForm.get('address')?.invalid && clientForm.get('address')?.touched ? 'danger' : ''">
+      <ion-input label="Endereço *" labelPlacement="floating" formControlName="address" type="text" placeholder="Rua, Número, Bairro, Cidade"></ion-input>
+    </ion-item>
+
+    <ion-button expand="block" type="submit" class="ion-margin-top" color="secondary">
+      <ion-icon name="save" slot="start"></ion-icon>
+      Salvar
+    </ion-button>
+  </form>
+</ion-content>

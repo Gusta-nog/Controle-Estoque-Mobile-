@@ -1,0 +1,7 @@
+{
+  "name": "controle-estoque-mobile",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular-standalone"
+}

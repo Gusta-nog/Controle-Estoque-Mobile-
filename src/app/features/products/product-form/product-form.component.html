@@ -1,0 +1,41 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/products"></ion-back-button>
+    </ion-buttons>
+    <ion-title>{{ isEditMode ? 'Editar Produto' : 'Novo Produto' }}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <form [formGroup]="productForm" (ngSubmit)="save()">
+    <ion-item lines="full" [color]="productForm.get('code')?.invalid && productForm.get('code')?.touched ? 'danger' : ''">
+      <ion-input label="Código *" labelPlacement="floating" formControlName="code" type="text" placeholder="Ex: PRD-001"></ion-input>
+    </ion-item>
+
+    <ion-item lines="full" [color]="productForm.get('name')?.invalid && productForm.get('name')?.touched ? 'danger' : ''">
+      <ion-input label="Nome *" labelPlacement="floating" formControlName="name" type="text" placeholder="Nome do produto"></ion-input>
+    </ion-item>
+
+    <ion-item lines="full" [color]="productForm.get('category')?.invalid && productForm.get('category')?.touched ? 'danger' : ''">
+      <ion-input label="Categoria *" labelPlacement="floating" formControlName="category" type="text" placeholder="Ex: Eletrônicos"></ion-input>
+    </ion-item>
+
+    <ion-item lines="full">
+      <ion-input label="Descrição" labelPlacement="floating" formControlName="description" type="text" placeholder="Detalhes (Opcional)"></ion-input>
+    </ion-item>
+    
+    <ion-item lines="full" [color]="productForm.get('price')?.invalid && productForm.get('price')?.touched ? 'danger' : ''">
+      <ion-input label="Preço Unitário (R$) *" labelPlacement="floating" formControlName="price" type="number" min="0" step="0.01"></ion-input>
+    </ion-item>
+    
+    <ion-item lines="full" [color]="productForm.get('stockQuantity')?.invalid && productForm.get('stockQuantity')?.touched ? 'danger' : ''">
+      <ion-input label="Quantidade em Estoque *" labelPlacement="floating" formControlName="stockQuantity" type="number" min="0"></ion-input>
+    </ion-item>
+
+    <ion-button expand="block" type="submit" class="ion-margin-top" color="secondary">
+      <ion-icon name="save" slot="start"></ion-icon>
+      Salvar
+    </ion-button>
+  </form>
+</ion-content>

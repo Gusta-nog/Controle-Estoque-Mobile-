@@ -1,0 +1,44 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Registro de Vendas</ion-title>
+  </ion-toolbar>
+  <ion-toolbar color="primary">
+    <ion-searchbar placeholder="Buscar por cliente ou nº..." [(ngModel)]="searchTerm" (ionInput)="filterSales()"></ion-searchbar>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding-vertical">
+  <ion-list>
+    @for (sale of filteredSales; track sale.id) {
+      <ion-item button detail="true" [routerLink]="['/sales/detail', sale.id]">
+        <ion-icon slot="start" name="document-text" [color]="sale.status === 'PAID' ? 'success' : 'warning'"></ion-icon>
+        <ion-label>
+          <h2>{{ sale.clientName }}</h2>
+          <p>{{ sale.date | date:'dd/MM/yyyy HH:mm' }} | {{ sale.itemCount }} item(ns)</p>
+          <p class="ion-text-wrap">Ref: <small>{{ sale.id.substring(0, 8) }}...</small></p>
+        </ion-label>
+        <div slot="end" class="ion-text-right">
+          <h3 style="font-weight: bold;">{{ sale.total | currency:'BRL' }}</h3>
+          <ion-badge [color]="sale.status === 'PAID' ? 'success' : 'warning'">
+            {{ sale.status === 'PAID' ? 'PAGO' : 'PENDENTE' }}
+          </ion-badge>
+        </div>
+      </ion-item>
+    }
+
+    @if (filteredSales.length === 0) {
+      <div class="ion-padding ion-text-center">
+        <p>Nenhuma venda registrada.</p>
+      </div>
+    }
+  </ion-list>
+
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button routerLink="/sales/new" color="secondary">
+      <ion-icon name="cart"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+</ion-content>

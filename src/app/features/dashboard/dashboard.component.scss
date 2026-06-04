@@ -1,0 +1,59 @@
+.welcome-banner {
+  background: var(--ion-color-primary);
+  color: white;
+  border-radius: 12px;
+  
+  h2 {
+    margin-top: 0;
+    font-weight: bold;
+  }
+  p {
+    margin-bottom: 0;
+    opacity: 0.9;
+  }
+}
+
+.metric-card {
+  margin: 4px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  height: calc(100% - 8px);
+
+  &.bg-gradient-warning {
+    background: linear-gradient(135deg, var(--ion-color-warning), #ffb74d);
+  }
+  &.bg-gradient-success {
+    background: linear-gradient(135deg, var(--ion-color-success), #4caf50);
+  }
+
+  ion-card-title {
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: var(--ion-color-dark);
+    margin-top: 8px;
+  }
+
+  .card-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 8px;
+    font-size: 20px;
+
+    &.blue {
+      background: rgba(var(--ion-color-primary-rgb), 0.1);
+      color: var(--ion-color-primary);
+    }
+    &.emerald {
+      background: rgba(var(--ion-color-secondary-rgb), 0.1);
+      color: var(--ion-color-secondary);
+    }
+    &.white {
+      background: rgba(255,255,255, 0.2);
+      color: white;
+    }
+  }
+}

@@ -1,0 +1,51 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Recebimentos</ion-title>
+  </ion-toolbar>
+  <ion-toolbar color="primary">
+    <ion-searchbar placeholder="Buscar por cliente ou nº..." [(ngModel)]="searchTerm" (ionInput)="applyFilters()"></ion-searchbar>
+  </ion-toolbar>
+  <ion-toolbar color="light">
+    <ion-segment [(ngModel)]="filterStatus" (ionChange)="applyFilters()">
+      <ion-segment-button value="all">
+        <ion-label>Todos</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="pending">
+        <ion-label>A Receber</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="paid">
+        <ion-label>Pagos</ion-label>
+      </ion-segment-button>
+    </ion-segment>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding-vertical">
+  <ion-list>
+    @for (sale of filteredSales; track sale.id) {
+      <ion-item button detail="true" [routerLink]="['/receivables/detail', sale.id]">
+        <ion-icon slot="start" [name]="sale.status === 'PAID' ? 'checkmark-circle' : 'time'" [color]="sale.status === 'PAID' ? 'success' : 'warning'"></ion-icon>
+        <ion-label>
+          <h2>{{ sale.clientName }}</h2>
+          <p>{{ sale.date | date:'dd/MM/yyyy HH:mm' }}</p>
+          <p class="ion-text-wrap">Ref: <small>{{ sale.id.substring(0, 8) }}...</small></p>
+        </ion-label>
+        <div slot="end" class="ion-text-right">
+          <h3 style="font-weight: bold;">{{ sale.total | currency:'BRL' }}</h3>
+          <ion-badge [color]="sale.status === 'PAID' ? 'success' : 'warning'">
+            {{ sale.status === 'PAID' ? 'PAGO' : 'PENDENTE' }}
+          </ion-badge>
+        </div>
+      </ion-item>
+    }
+
+    @if (filteredSales.length === 0) {
+      <div class="ion-padding ion-text-center">
+        <p>Nenhum recebimento encontrado com estes filtros.</p>
+      </div>
+    }
+  </ion-list>
+</ion-content>

@@ -1,0 +1,48 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Clientes</ion-title>
+  </ion-toolbar>
+  <ion-toolbar color="primary">
+    <ion-searchbar placeholder="Pesquisar por nome ou CPF..." [(ngModel)]="searchTerm" (ionInput)="filterClients()"></ion-searchbar>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-list>
+    @for (client of filteredClients; track client.id) {
+      <ion-item-sliding>
+        <ion-item>
+          <ion-icon slot="start" name="briefcase" color="tertiary"></ion-icon>
+          <ion-label>
+            <h2>{{ client.name }}</h2>
+            <p>CPF: {{ client.cpf }} | Tel: {{ client.phone }}</p>
+          </ion-label>
+        </ion-item>
+
+        <ion-item-options side="end">
+          <ion-item-option color="primary" [routerLink]="['/clients/edit', client.id]">
+            <ion-icon slot="icon-only" name="create"></ion-icon>
+          </ion-item-option>
+          <ion-item-option color="danger" (click)="confirmDelete(client)">
+            <ion-icon slot="icon-only" name="trash"></ion-icon>
+          </ion-item-option>
+        </ion-item-options>
+      </ion-item-sliding>
+    }
+
+    @if (filteredClients.length === 0) {
+      <div class="ion-padding ion-text-center">
+        <p>Nenhum cliente encontrado.</p>
+      </div>
+    }
+  </ion-list>
+
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button routerLink="/clients/new" color="secondary">
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+</ion-content>

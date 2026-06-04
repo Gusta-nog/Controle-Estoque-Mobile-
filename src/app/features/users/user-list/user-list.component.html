@@ -1,0 +1,48 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Usuários</ion-title>
+  </ion-toolbar>
+  <ion-toolbar color="primary">
+    <ion-searchbar placeholder="Pesquisar por nome ou usuário..." [(ngModel)]="searchTerm" (ionInput)="filterUsers()"></ion-searchbar>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-list>
+    @for (user of filteredUsers; track user.id) {
+      <ion-item-sliding>
+        <ion-item>
+          <ion-icon slot="start" [name]="user.role === 'admin' ? 'shield-checkmark' : 'person'" [color]="user.role === 'admin' ? 'warning' : 'medium'"></ion-icon>
+          <ion-label>
+            <h2>{{ user.name }}</h2>
+            <p>@{{ user.username }} | {{ user.role === 'admin' ? 'Administrador' : 'Padrão' }}</p>
+          </ion-label>
+        </ion-item>
+
+        <ion-item-options side="end">
+          <ion-item-option color="primary" [routerLink]="['/users/edit', user.id]">
+            <ion-icon slot="icon-only" name="create"></ion-icon>
+          </ion-item-option>
+          <ion-item-option color="danger" (click)="confirmDelete(user)">
+            <ion-icon slot="icon-only" name="trash"></ion-icon>
+          </ion-item-option>
+        </ion-item-options>
+      </ion-item-sliding>
+    }
+
+    @if (filteredUsers.length === 0) {
+      <div class="ion-padding ion-text-center">
+        <p>Nenhum usuário encontrado.</p>
+      </div>
+    }
+  </ion-list>
+
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button routerLink="/users/new" color="secondary">
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+</ion-content>
