@@ -3,8 +3,8 @@ import { CommonModule } from '@angular/common';
 import { IonHeader, IonToolbar, IonTitle, IonContent, IonButtons, IonMenuButton, IonGrid, IonRow, IonCol, IonCard, IonCardHeader, IonCardSubtitle, IonCardTitle, IonIcon } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { cube, apps, cash, checkmarkCircle, time } from 'ionicons/icons';
-import { ProductService } from '../../../services/product.service';
-import { SaleService } from '../../../services/sale.service';
+import { ProductService } from '../../services/product.service';
+import { SaleService } from '../../services/sale.service';
 
 @Component({
   selector: 'app-dashboard',
